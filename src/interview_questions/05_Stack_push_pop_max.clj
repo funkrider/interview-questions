@@ -17,9 +17,9 @@
 ;; Pop - will decrement count, if (= value max)
 ;;   then (pop max-count), and pop stack
 
-(def a-stack (atom '()))
-(def max-value (atom Integer/MIN_VALUE))
-(def max-index-stack (atom '()))
+(def ^:dynamic a-stack (atom '()))
+(def ^:dynamic max-value (atom Integer/MIN_VALUE))
+(def ^:dynamic max-index-stack (atom '()))
 
 ;; Private funcs declare first
 (defn- push-new-max [max-value-atom max-index-stack-atom index value]

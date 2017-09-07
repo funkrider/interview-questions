@@ -19,64 +19,28 @@
 ;;; Push - takes index off available stack puts into used array
 ;;; Pop - takes index off the used and adds back to available
 
-(defrecord ArrayStack [stacks array-size]
-  ;; Implement the Lifecycle protocol
-  component/Lifecycle
+(def ^:dynamic stack-count 3)
+(def ^:dynamic array-size 10)
+(def ^:dynamic data (atom (apply vector-of :char (repeat array-size \space))))
+(def ^:dynamic available-index (atom (apply list (range 0 array-size))))
+(def ^:dynamic used-stack-index (atom (apply vector (repeat stack-count '()))))
 
-  (start [component]
-    (println ";; Starting ArrayStack")
-    ;; In the 'start' method, initialize this component
-    ;; and start it running. For example, connect to a
-    ;; database, create thread pools, or initialize shared
-    ;; state.
-    (let [stack-count stacks
-          array-size array-size
-          data (atom (apply vector-of :char (repeat array-size \space)))
-          available-index (atom (apply list (range 0 array-size)))
-          used-stack-index (atom (apply vector (repeat stack-count '())))]
-      ;; Return an updated version of the component with
-      ;; the run-time state assoc'd in.
-
-      (assoc component :data data
-                       :available-index available-index
-                       :used-stack-index used-stack-index)))
-
-  (stop [component]
-    (println ";; Stopping ArrayStack")
-    ;; In the 'stop' method, shut down the running
-    ;; component and release any external resources it has
-    ;; acquired.
-    ;; Return the component, optionally modified. Remember that if you
-    ;; dissoc one of a record's base fields, you get a plain map.
-    (assoc component :data nil
-                     :available-index nil
-                     :used-stack-index nil)))
-
-;; Constructor method
-(defn new-array-stack [stacks array-size]
-  (map->ArrayStack {:stacks stacks :array-size array-size}))
-
-(defn array-stack-system [config-options]
-  (let [{:keys [stacks array-size]} config-options]
-    (component/system-map
-      :array-stack (new-array-stack stacks array-size))))
-
-(defn push-to-stack [ArrayStack stack-ind val]
-  (when-let [i (peek (deref (:available-index ArrayStack)))]
+(defn push-to-stack [stack-ind val]
+  (when-let [i (peek @available-index)]
     (do
-      (swap! (:available-index ArrayStack) pop)
-      (swap! (:used-stack-index ArrayStack) update-in [stack-ind] #(conj % i) )
-      (swap! (:data ArrayStack) assoc i val) ;; last so returns
+      (swap! available-index pop)
+      (swap! used-stack-index update-in [stack-ind] #(conj % i) )
+      (swap! data assoc i val) ;; last so returns
       )
     )
   )
 
-(defn pop-from-stack [ArrayStack stack-ind]
-  (when-let [i (peek (get-in (deref (:used-stack-index ArrayStack)) [stack-ind]))]
-    (let [val (get (deref (:data ArrayStack)) i)]
-      (swap! (:available-index ArrayStack) conj i)
-      (swap! (:used-stack-index ArrayStack) update-in [stack-ind] pop)
-      (swap! (:data ArrayStack) assoc i \space)
+(defn pop-from-stack [stack-ind]
+  (when-let [i (peek (get-in @used-stack-index [stack-ind]))]
+    (let [val (get @data i)]
+      (swap! available-index conj i)
+      (swap! used-stack-index update-in [stack-ind] pop)
+      (swap! data assoc i \space)
       val ;; return the data popped off the top
       )
     )
