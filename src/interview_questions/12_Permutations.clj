@@ -1,4 +1,5 @@
-(ns interview-questions.12-Permutations)
+(ns interview-questions.12-Permutations
+  (:require [clojure.math.combinatorics :as combo]))
 
 ;;; Given a string for example "abc" return a list
 ;;; of all possible permutations of the characters.
@@ -12,9 +13,20 @@
 ;;;
 ;;;
 
+(defn test-combo [xs]
+  (combo/permutations xs))
+
 (defn remove-nth [coll n]
   "Removes the item from the sequence at the given index."
-  (into (drop (inc n) coll) (reverse (take n coll))))
+  (let [v (vec coll)]
+    (if (or (empty? v)
+            (< n 0)
+            (>= n (count v)))
+      coll
+      (concat (subvec v 0 n) (subvec v (inc n))))
+    )
+  ;(into (drop (inc n) coll) (reverse (take n coll)))
+  )
 
 (defn append-index [coll]
   "Takes a sequence and returns a new one with the item
@@ -33,57 +45,29 @@
       (cons (last x) y)))))
 
 
-; Debugging the permuation function is as follows:
-; permutation '(\a \b \c)
-; i-xs -> '([0 \a] [1 \b] [2 \c])
-; count xs -> 3 :. take else branch
-; for [x '([0 \a] [1 \b] [2 \c])  ; x is first bound to [0 \a]
-;      y (permuation (remove '(\a \b \c) 0)]
-; permutation '(\b \c)
-; i-xs -> '([0 \b] [1 \c])
-; count xs -> 2 :. take else branch
-; for [x '([0 \b] [1 \c])
-;      y (permutation (remove '(\b \c) (first [0 \b])
-; permutation '(\c)
-; i-xs -> '([0 \c])
-; count xs -> 1 :. take if branch
-; return '( (\c) )
-;      y -> '( (\c) )
-; (cons \b (\c) -> (\b \c)
-; for [x '([0 \b] [1 \c])
-;      y (permutation (remove '(\b \c) (first [1 \c])
-; permutation '(\b)
-; i-xs -> '([0 \b])
-; count xs -> 1 :. take if branch
-; return '( (\b) )
-;      y -> '( (\b) )
-; (cons \c (\b) -> (\c \b)
-; returns '((\b \c) (\c \b))
-;      y -> '((\b \c) (\c \b))
-; (cons \a (\b \c) -> (\a \b \c)
-; (cons \a (\c \b) -> (\a \c \b)
-; returns '((\a \b \c) (\a \c \b))
-;
-; x -> [1 \b] y -> '((\a \c) (\c \a))
-; returns '((\b \a \c) (\b \a \b))    etc...
+;;; A different implementation using rotations
+;;; and mapping over those.
 
+(defn rotations [a-seq]
+  "Returns all rotations of a sequence.
+  E.g. (rotations (range 5)) ->
+  ( (1 2 3 4 0) (2 3 4 0 1) (3 4 0 1 2)
+    (4 0 1 2 3) (0 1 2 3 4) )"
+  (let [a-vec (vec a-seq)]
+    (for [i (range (count a-vec))]
+      (concat (subvec a-vec i) (subvec a-vec 0 i)))))
 
+(defn permutations-rot [a-set]
+  "Returns all permutations of a set."
+  (if (empty? a-set)
+    (list ())
+    (mapcat
+      (fn [[x & xs]] (map #(cons x %) (permutations-rot xs)))
+      (rotations a-set))))
 
-;(defn for-split [xs]
-;  (loop [i 0
-;         out '()]
-;    (if (> (inc i) (count xs))
-;      out
-;      (let [pre (nth xs i)
-;            post (remove-nth xs i)
-;            pair (vector  (nth xs i) (remove-nth xs i))]
-;        (recur (inc i) (conj out pair)))))
-;  )
-
-;
-;(defn permutations [xs]
-;  (if (= 1 (count xs))
-;    (list xs)
-;    (for [x xs
-;          y (permutations (disj (set xs) x))]
-;      (cons x y))))
+(defn permutations-set [xs]
+  (if (= 1 (count xs))
+    (list xs)
+    (for [x xs
+          y (permutations (disj (set xs) x))]
+      (cons x y))))
