@@ -1,6 +1,6 @@
 (ns interview-questions.01-FizzBuzz
   (:require [clojure.spec.alpha :as s]))
-;;;
+
 ;; Output numbers from 1 to x. If the number
 ;; is divisible by 3, replace it with Fizz.
 ;; If it is divisible by 5, replace it with Buzz.
@@ -10,9 +10,12 @@
 ;;    11 "fizz" 13 14 "fizzbuzz")
 
 (defn divisible-by? [divisor num]
-  (if (or (nil? divisor) (nil? num)
-        (= 0 divisor) (= 0 num)
-        (not (nat-int? divisor)) (not (nat-int? num)))
+  (if (or (nil? divisor)
+          (nil? num)
+          (= 0 divisor)
+          (= 0 num)
+          (not (nat-int? divisor))
+          (not (nat-int? num)))
     false
     (= (mod num divisor) 0)))
 

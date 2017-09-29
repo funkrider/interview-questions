@@ -2,6 +2,10 @@
   (:require [clojure.test :refer :all]
             [interview-questions.01-FizzBuzz :refer :all]))
 
+(deftest addition
+  (is (= 4 (+ 2 2)))
+  (is (= 7 (+ 3 4))))
+
 
 (testing "Helper Functions"
   (is (true? (divisible-by? 2 4)))
@@ -24,7 +28,7 @@
 
   (is (= (take 10 (positive-numbers))
         '(1 2 3 4 5 6 7 8 9 10)))
-
+ 
   )
 
 (testing "Fizz-buzz"
