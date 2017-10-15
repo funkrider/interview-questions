@@ -23,7 +23,7 @@
   "Binary trick: (bit-and a (- a 1)) => 0 when a is power of 2.
   e.g.  00100 && 00011 => 0. Note 0 is not a power of 2 but 1 is."
   [x]
-  (if (= 0 x)
+  (if (<= x 0)
     false
     (= 0 (bit-and x (- x 1)))))
 
