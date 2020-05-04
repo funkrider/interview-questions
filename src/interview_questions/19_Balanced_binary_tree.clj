@@ -4,6 +4,11 @@
 ;;; binary tree and false where it is not. Balanced is defined as all
 ;;; sub-trees having only child branches that are within 1 of the same size.
 
+;;; AVL tree (Adelson-Velskii and Landis) are balanced binary search trees.
+;;; To re-balance after an edit you must walk 2 up from the new spot (leaf)
+;;; and if you go same direction both steps (zig zig) then one rotation is
+;;; needed. If you go zig zag then you need 2 rotations to re-balance.
+
 ;;;         1
 ;;;    2         3
 ;;;  4   5     6   7

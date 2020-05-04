@@ -16,8 +16,6 @@
 (defn kth-most-frequent [input k]
   (-> input
     (frequencies)             ; {"abc" 2, "def" 1}
-    (clojure.set/map-invert)  ; {2 "abc", 1 "def"}
+    (clojure.set/map-invert)  ; {2 "abc", 1 "def"} ;; Would drop duplicates!
     (into (sorted-map))
-    (#(nth (seq %) (dec (limit k 1 (count %))))))
-  )
-
+    (#(nth (seq %) (dec (limit k 1 (count %)))))))

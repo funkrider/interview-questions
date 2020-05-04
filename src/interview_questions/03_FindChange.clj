@@ -16,8 +16,7 @@
 
 (defn find-equal-or-first-lower [coins x]
 "Goes through a sorted set and returns the greatest item equal to or less than x"
-(apply max (filter #(<= % x) coins))
-)
+(apply max (filter #(<= % x) coins)))
 
 (defn find-change [coins x]
 "Find largest coin from available set, then iterate on remainder"
@@ -27,4 +26,9 @@
           rem (- val coin)]
       (if (< rem 1)
         (conj change coin) 
-        (recur (conj change coin) rem )))))
+        (recur (conj change coin) rem)))))
+
+(find-change (sorted-set 1 5 10 25) 12)
+
+;; This would be faster if we did a modulus and returned
+;; multiples of a given coin. For example 75c -> 3 x 25c

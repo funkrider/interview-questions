@@ -2,10 +2,11 @@
   (:require [clojure.test :refer :all]
             [interview-questions.01-FizzBuzz :refer :all]))
 
-(deftest addition
-  (is (= 4 (+ 2 2)))
-  (is (= 7 (+ 3 4))))
+(def fizz-buzz-to-16
+  '(1 2 "fizz" 4 "buzz" "fizz" 7 8 "fizz" "buzz" 11 "fizz" 13 14 "fizzbuzz"))
 
+(testing "Basic naieve version."
+  (is (= fizz-buzz-to-16 (fizz-buzz-basic 16))))
 
 (testing "Helper Functions"
   (is (true? (divisible-by? 2 4)))
@@ -28,9 +29,10 @@
 
   (is (= (take 10 (positive-numbers))
         '(1 2 3 4 5 6 7 8 9 10)))
- 
+
   )
 
-(testing "Fizz-buzz"
-  (is (= (fizz-buzz 15)
-        '(1 2 "fizz" 4 "buzz" "fizz" 7 8 "fizz" "buzz" 11 "fizz" 13 14 "fizzbuzz"))))
+(testing "Fizz-buzz using replace"
+  (is (= "fizzbuzz" (fizz-buzz-replace 15)))
+
+  (is (= fizz-buzz-to-16 (fizz-buzz-by-replace 16))))

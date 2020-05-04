@@ -13,8 +13,9 @@
 (defn ones
   ([num] (ones num 0))
   ([num count]
-    (let [total (+ count (bit-and 1 num))
-          newnum (bit-shift-right num 1)]
+    (loop [total count
+           newnum num]
       (if (= 0 newnum)
         total
-        (recur newnum total)))))
+        (recur (+ total (bit-and 1 newnum))
+               (bit-shift-right newnum 1))))))

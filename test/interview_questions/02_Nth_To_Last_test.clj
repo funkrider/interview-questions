@@ -5,15 +5,47 @@
 (testing "Nth to last"
 
   (is (= (nth-to-last '(:a :b :c :d :e :f :g :h) 0)
-        :h))
+         :h))
 
   (is (= (nth-to-last '(:a :b :c :d :e :f :g :h) 1)
-        :g))
+         :g))
 
   (is (= (nth-to-last '(:a :b :c :d :e :f :g :h) 7)
-        :a))
+         :a))
 
   (is (= (nth-to-last '(:a :b :c :d :e :f :g :h) 8)
+         nil))
+
+  )
+
+(testing "Nth to last redux"
+
+  (is (= (nth-to-last-redux '(:a :b :c :d :e :f :g :h) 0)
+         :h))
+
+  (is (= (nth-to-last-redux '(:a :b :c :d :e :f :g :h) 1)
+         :g))
+
+  (is (= (nth-to-last-redux '(:a :b :c :d :e :f :g :h) 7)
+         :a))
+
+  (is (= (nth-to-last-redux '(:a :b :c :d :e :f :g :h) 8)
+         nil))
+
+  )
+
+(testing "Nth to last redux"
+
+  (is (= (nth-to-last-pointers '(:a :b :c :d :e :f :g :h) 0)
+        :h))
+
+  (is (= (nth-to-last-pointers '(:a :b :c :d :e :f :g :h) 1)
+        :g))
+
+  (is (= (nth-to-last-pointers '(:a :b :c :d :e :f :g :h) 7)
+        :a))
+
+  (is (= (nth-to-last-pointers '(:a :b :c :d :e :f :g :h) 8)
         nil))
 
   )
